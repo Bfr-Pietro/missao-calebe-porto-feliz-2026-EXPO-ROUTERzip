@@ -76,9 +76,9 @@
       "policy": "appVersion"
     },
     "extra": {
-      "eas": {
-        "projectId": "YOUR_EAS_PROJECT_ID"
-      },
+  "eas": {},
+  "router": {}
+    },
       "router": {}
     }
   }
