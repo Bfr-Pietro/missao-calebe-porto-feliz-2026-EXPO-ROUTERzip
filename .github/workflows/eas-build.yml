@@ -1,0 +1,45 @@
+name: EAS Build (Android APK)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "Perfil do eas.json a usar"
+        required: true
+        default: "preview"
+        type: choice
+        options:
+          - preview
+          - production
+          - development
+
+jobs:
+  build:
+    name: Build Android APK on EAS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar EAS CLI
+        run: npm install -g eas-cli
+
+      - name: Instalar dependências do projeto
+        run: npm install --legacy-peer-deps
+
+      - name: Disparar build na nuvem (EAS)
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas build \
+            --platform android \
+            --profile ${{ github.event.inputs.profile || 'preview' }} \
+            --non-interactive \
+            --no-wait
