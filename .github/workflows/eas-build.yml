@@ -1,5 +1,8 @@
 name: EAS Build (Android APK)
 
+# Permite dois jeitos de disparar o build, os dois pelo navegador:
+# 1) Automático a cada push na branch "main".
+# 2) Manual: aba "Actions" do GitHub → "EAS Build (Android APK)" → "Run workflow".
 on:
   push:
     branches: [main]
@@ -33,6 +36,11 @@ jobs:
 
       - name: Instalar dependências do projeto
         run: npm install --legacy-peer-deps
+
+      - name: Configurar projeto EAS (cria se não existir)
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas init --non-interactive --force
 
       - name: Disparar build na nuvem (EAS)
         env:
